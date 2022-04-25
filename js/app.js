@@ -19,17 +19,30 @@ exit_btn.onclick = () => {
 continue_btn.onclick = () => {
 	info_box.classList.remove("activeInfo"); // Hide the Info box
 	quiz_box.classList.add("activeQuiz"); // Show the Quiz box
-	showQuestions(que_count);
+	showQuestions(0);
 }
 
 
 let que_count = 0;
 
+const next_btn = quiz_box.querySelector('.next-btn');
+
+// If Next Button Clicked
+next_btn.onclick = () => {
+	if (que_count < questions.length - 1) {
+		que_count++;
+		showQuestions(que_count)
+	} else {
+		console.log('Questions completed');
+
+	}
+}
+
 // Getting questions and options from array
 function showQuestions(index) {
 	const que_text = document.querySelector(".que-text");
 	const option_list = document.querySelector(".option-list");
-	let que_tag = `<span>${questions[index].question}</span>`;
+	let que_tag = `<span>${questions[index].num}. ${questions[index].question}</span>`;
 	let option_tag = `<li class="option">
 								<span>${questions[index].options[0]}</span>
 							</li>
