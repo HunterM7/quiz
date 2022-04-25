@@ -22,10 +22,10 @@ continue_btn.onclick = () => {
 	showQuestions(0);
 }
 
-
 let que_count = 0;
 
 const next_btn = quiz_box.querySelector('.next-btn');
+
 
 // If Next Button Clicked
 next_btn.onclick = () => {
@@ -34,7 +34,6 @@ next_btn.onclick = () => {
 		showQuestions(que_count)
 	} else {
 		console.log('Questions completed');
-
 	}
 }
 
@@ -42,7 +41,8 @@ next_btn.onclick = () => {
 function showQuestions(index) {
 	const que_text = document.querySelector(".que-text");
 	const option_list = document.querySelector(".option-list");
-	let que_tag = `<span>${questions[index].num}. ${questions[index].question}</span>`;
+	const total_que = quiz_box.querySelector('.total-que');
+	let que_tag = `<span>${que_count + 1}. ${questions[index].question}</span>`;
 	let option_tag = `<li class="option">
 								<span>${questions[index].options[0]}</span>
 							</li>
@@ -55,6 +55,10 @@ function showQuestions(index) {
 							<li class="option">
 								<span>${questions[index].options[3]}</span>
 							</li>`;
+	let total_tag = `<span>
+								<p>${que_count + 1}</p>of<p>5</p>Questions
+							</span>`
 	que_text.innerHTML = que_tag;
 	option_list.innerHTML = option_tag;
+	total_que.innerHTML = total_tag;
 }
