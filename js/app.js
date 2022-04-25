@@ -44,21 +44,31 @@ function showQuestions(index) {
 	const que_text = document.querySelector(".que-text");
 	const option_list = document.querySelector(".option-list");
 	let que_tag = `<span>${que_count + 1}. ${questions[index].question}</span>`;
-	let option_tag = `<li class="option">
-								<span>${questions[index].options[0]}</span>
-							</li>
-							<li class="option">
-								<span>${questions[index].options[1]}</span>
-							</li>
-							<li class="option">
-								<span>${questions[index].options[2]}</span>
-							</li>
-							<li class="option">
-								<span>${questions[index].options[3]}</span>
-							</li>`;
+	let option_tag = `<li class="option"><span>${questions[index].options[0]}</span></li>` +
+		`<li class="option"><span>${questions[index].options[1]}</span></li>` +
+		`<li class="option"><span>${questions[index].options[2]}</span></li>` +
+		`<li class="option"><span>${questions[index].options[3]}</span></li>`;
 
 	que_text.innerHTML = que_tag;
 	option_list.innerHTML = option_tag;
+
+	const option = option_list.querySelectorAll('.option');
+	for (let key of option) {
+		key.setAttribute("onclick", "optionSelected(this)")
+	}
+}
+
+function optionSelected(answer) {
+	let userAns = answer.textContent;
+	let correctAns = questions[que_count].answer;
+
+	if (userAns == correctAns) {
+		console.log('Answer is correct!');
+	} else {
+		console.log('Answer is wrong');
+	}
+	console.log(userAns, correctAns);
+
 }
 
 function queCounter(index) {
