@@ -4,6 +4,8 @@ const info_box = document.querySelector(".info-box");
 const quiz_box = document.querySelector(".quiz-box");
 const exit_btn = info_box.querySelector(".buttons .quit");
 const continue_btn = info_box.querySelector(".buttons .restart");
+const option_list = document.querySelector(".option-list");
+const timeCount = quiz_box.querySelector(".timer-sec");
 
 // If Start Quiz Button Clicked
 start_btn.onclick = () => {
@@ -21,9 +23,12 @@ continue_btn.onclick = () => {
 	quiz_box.classList.add("activeQuiz"); // Show the Quiz box
 	showQuestions(que_count);
 	queCounter(que_count);
+	startTimer(15);
 }
 
 let que_count = 0;
+let counter;
+let timeValue = 15;
 
 const next_btn = quiz_box.querySelector('.next-btn');
 
@@ -34,6 +39,8 @@ next_btn.onclick = () => {
 		que_count++;
 		showQuestions(que_count);
 		queCounter(que_count);
+		clearInterval(counter);
+		startTimer(timeValue);
 	} else {
 		console.log('Questions completed');
 	}
@@ -42,7 +49,6 @@ next_btn.onclick = () => {
 // Getting questions and options from array
 function showQuestions(index) {
 	const que_text = document.querySelector(".que-text");
-	const option_list = document.querySelector(".option-list");
 	let que_tag = `<span>${que_count + 1}. ${questions[index].question}</span>`;
 	let option_tag = `<li class="option"><span>${questions[index].options[0]}</span></li>` +
 		`<li class="option"><span>${questions[index].options[1]}</span></li>` +
@@ -58,17 +64,44 @@ function showQuestions(index) {
 	}
 }
 
+let tickIcon = '<div class="icon tick"><i class="fa-solid fa-check"></i></div>';
+let crossIcon = '<div class="icon cross"><i class="fa-solid fa-xmark"></i></div>';
+
 function optionSelected(answer) {
+	clearInterval(counter);
 	let userAns = answer.textContent;
 	let correctAns = questions[que_count].answer;
 
-	if (userAns == correctAns) {
-		console.log('Answer is correct!');
+	if (userAns === correctAns) {
+		answer.classList.add("correct");
+		answer.insertAdjacentHTML("beforeend", tickIcon);
 	} else {
-		console.log('Answer is wrong');
-	}
-	console.log(userAns, correctAns);
+		answer.classList.add("incorrect");
+		answer.insertAdjacentHTML("beforeend", crossIcon);
 
+		// if answer is incorrect then automatically selected the correct answer
+		for (let key of option_list.children) {
+			// if (key.textContent === correctAns) key.setAttribute("class", "option correct")
+			if (key.textContent === correctAns) {
+				key.classList.add("correct");
+				key.insertAdjacentHTML("beforeend", tickIcon);
+			}
+		}
+	}
+
+	// Once user selected disabled all options
+	for (let key of option_list.children) {
+		key.classList.add('disabled')
+	}
+}
+
+function startTimer(time) {
+	timeCount.textContent = time;
+	counter = setInterval(timer, 1000);
+	function timer() {
+		timeCount.textContent = time - 1;
+		time--;
+	}
 }
 
 function queCounter(index) {
