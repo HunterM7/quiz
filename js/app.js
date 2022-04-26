@@ -96,11 +96,15 @@ function optionSelected(answer) {
 }
 
 function startTimer(time) {
-	timeCount.textContent = time;
+	timer();
 	counter = setInterval(timer, 1000);
 	function timer() {
-		timeCount.textContent = time - 1;
-		time--;
+		if (time >= 0) {
+			timeCount.textContent = time;
+			time--;
+		} else {
+			clearInterval(counter);
+		}
 	}
 }
 
