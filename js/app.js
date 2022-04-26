@@ -101,6 +101,9 @@ function startTimer(time) {
 	function timer() {
 		if (time >= 0) {
 			timeCount.textContent = time;
+			if (time < 10) {
+				timeCount.textContent = '0' + timeCount.textContent
+			}
 			time--;
 		} else {
 			clearInterval(counter);
