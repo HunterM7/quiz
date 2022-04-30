@@ -162,12 +162,16 @@ function showResultBox() {
 	result_box.classList.add("activeResult");
 
 	let score;
-
-	if (userScore < 3) {
+	if (userScore == 0) {
+		score = `<span>И, к сожалению, Вы ответили неправильно на все вопросы.</span>`
+	}
+	else if (userScore < 3) {
 		score = `<span>И, к сожалению, вы набрали всего <span>${userScore}</span> из <span>5</span>.</span>`;
-	} else if (userScore < 5) {
+	}
+	else if (userScore < 5) {
 		score = `<span>И набрали целых <span>${userScore}</span> из <span>5</span>!</span>`;
-	} else {
+	}
+	else {
 		score = `<span>И ответили на все <span>${userScore}</span> вопросов верно!</span>`;
 	}
 
