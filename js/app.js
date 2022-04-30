@@ -1,12 +1,29 @@
 // Getting all required elements
-const start_btn = document.querySelector(".start-btn button");
 const info_box = document.querySelector(".info-box");
 const quiz_box = document.querySelector(".quiz-box");
+const result_box = document.querySelector('.result-box');
+const start_btn = document.querySelector(".start-btn button");
 const exit_btn = info_box.querySelector(".buttons .quit");
 const continue_btn = info_box.querySelector(".buttons .restart");
 const option_list = document.querySelector(".option-list");
 const timeCount = quiz_box.querySelector(".timer-sec");
 const timeLine = quiz_box.querySelector(".time-line");
+const next_btn = quiz_box.querySelector('.next-btn');
+const score_quiz = result_box.querySelector('.score-text');
+const restart_quiz = result_box.querySelector('.restart');
+const quit_quiz = result_box.querySelector('.quit');
+
+
+let que_count = 0;
+let counter;
+let timeValue = 15;
+let widthValue = 0;
+let userScore = 0;
+const fps = 50;
+
+
+let tickIcon = '<div class="icon tick"><i class="fa-solid fa-check"></i></div>';
+let crossIcon = '<div class="icon cross"><i class="fa-solid fa-xmark"></i></div>';
 
 // If Start Quiz Button Clicked
 start_btn.onclick = () => {
@@ -24,17 +41,9 @@ continue_btn.onclick = () => {
 	quiz_box.classList.add("activeQuiz"); // Show the Quiz box
 	showQuestions(que_count);
 	queCounter(que_count);
-	startTimer(15);
-	startTimerLine(0);
+	startTimer(timeValue);
+	startTimerLine(timeValue, fps);
 }
-
-let que_count = 0;
-let counter;
-let timeValue = 15;
-let widthValue = 0;
-
-const next_btn = quiz_box.querySelector('.next-btn');
-
 
 // If Next Button Clicked
 next_btn.onclick = () => {
@@ -45,10 +54,12 @@ next_btn.onclick = () => {
 		clearInterval(counter);
 		startTimer(timeValue);
 		clearInterval(counterLine);
-		startTimerLine(widthValue);
+		startTimerLine(timeValue, fps);
 	} else {
-		console.log('Questions completed');
+		showResultBox();
 	}
+
+	next_btn.classList.add("disabled");
 }
 
 // Getting questions and options from array
@@ -64,13 +75,13 @@ function showQuestions(index) {
 	option_list.innerHTML = option_tag;
 
 	const option = option_list.querySelectorAll('.option');
+
 	for (let key of option) {
 		key.setAttribute("onclick", "optionSelected(this)")
 	}
-}
 
-let tickIcon = '<div class="icon tick"><i class="fa-solid fa-check"></i></div>';
-let crossIcon = '<div class="icon cross"><i class="fa-solid fa-xmark"></i></div>';
+	next_btn.classList.add("disabled");
+};
 
 function optionSelected(answer) {
 	clearInterval(counter);
@@ -81,6 +92,7 @@ function optionSelected(answer) {
 	if (userAns === correctAns) {
 		answer.classList.add("correct");
 		answer.insertAdjacentHTML("beforeend", tickIcon);
+		userScore++;
 	} else {
 		answer.classList.add("incorrect");
 		answer.insertAdjacentHTML("beforeend", crossIcon);
@@ -99,32 +111,43 @@ function optionSelected(answer) {
 	for (let key of option_list.children) {
 		key.classList.add('disabled')
 	}
-}
+
+	next_btn.classList.remove("disabled");
+};
 
 function startTimer(time) {
 	timer();
 	counter = setInterval(timer, 1000);
+
 	function timer() {
 		if (time >= 0) {
 			timeCount.textContent = time;
+
 			if (time < 10) {
 				timeCount.textContent = '0' + timeCount.textContent
 			}
+
 			time--;
 		} else {
 			clearInterval(counter);
 		}
 	}
-}
+};
 
-function startTimerLine(time) {
-	counterLine = setInterval(timer, 29);
+function startTimerLine(time, fps) {
+	timeLine.style.width = '0%';
+	counterLine = setInterval(timer, 1000 / fps);
+	let lineWidth = 0;
+
 	function timer() {
-		time++;
-		timeLine.style.width = time + 'px';
-		if (time > 549) clearInterval(counterLine);
+		lineWidth += 100 / ((time + 0) * fps);
+		timeLine.style.width = lineWidth + '%';
+		if (lineWidth > 100) {
+			clearInterval(counterLine);
+			timeLine.style.width = `100%`;
+		}
 	}
-}
+};
 
 function queCounter(index) {
 	const total_que = quiz_box.querySelector('.total-que');
@@ -132,4 +155,12 @@ function queCounter(index) {
 		<p>${index + 1}</p>of<p>${questions.length}</p>Questions
 	</span>`
 	total_que.innerHTML = total_tag;
-}
+};
+
+function showResultBox() {
+	quiz_box.classList.remove("activeQuiz");
+	result_box.classList.add("activeResult");
+
+	const score = `<span>и, к сожалению, вы набрали всего <span>${userScore}</span> из <span>5</span>.</span>`
+	score_quiz.innerHTML = score;
+};
