@@ -161,6 +161,15 @@ function showResultBox() {
 	quiz_box.classList.remove("activeQuiz");
 	result_box.classList.add("activeResult");
 
-	const score = `<span>и, к сожалению, вы набрали всего <span>${userScore}</span> из <span>5</span>.</span>`
+	let score;
+
+	if (userScore < 3) {
+		score = `<span>И, к сожалению, вы набрали всего <span>${userScore}</span> из <span>5</span>.</span>`;
+	} else if (userScore < 5) {
+		score = `<span>И набрали целых <span>${userScore}</span> из <span>5</span>!</span>`;
+	} else {
+		score = `<span>И ответили на все <span>${userScore}</span> вопросов верно!</span>`;
+	}
+
 	score_quiz.innerHTML = score;
 };
